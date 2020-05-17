@@ -103,6 +103,3 @@ def main(filename='test.tsv', save=True, path='data/'):
                                  index=False)
 
     return preprocessed_data
-
-
-main()

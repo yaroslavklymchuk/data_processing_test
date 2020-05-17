@@ -6,6 +6,14 @@ from normalizers import normalize_data_wrapper, standartize
 
 
 def create_features_columns(df, features_columns=['features']):
+    """Parse features from string representation into dataframe's columns
+
+    :param df - dataframe
+    :param features_columns - list of columns in df, that are string representation of features,
+    each column for each feature code
+
+    :returns dataframe with formed columns (int type), that represents each feature in string
+    """
     unique_features_codes = df[features_columns].apply(
         lambda x: x.str.split(',')[0]).apply(lambda x: x[0]).unique()
 
@@ -27,6 +35,13 @@ def create_features_columns(df, features_columns=['features']):
 
 
 def create_z_stand_mapping(df, features_mapping):
+    """Creates helper-dictionary for z-standartization for each feature and for each feature code
+
+    :param df - dataframe
+    :param features_mapping - dictionary, that represents feature codes as keys and list of it's features as values
+
+    :returns helper-dictionary for each feature in form: {feature: {'avg': , 'std': }}
+    """
     z_standartization_mapping = defaultdict(dict)
 
     for features_column, mapping in features_mapping.items():
@@ -39,6 +54,12 @@ def create_z_stand_mapping(df, features_mapping):
 
 
 def get_max_indexes(df, features_mapping):
+    """Calculates index of maximum feature for each id in dataframe and related features
+
+    :param df - dataframe
+    :param features_mapping - dictionary, that represents feature codes as keys and list of it's features as values
+
+    :returns dataframe with calculated features"""
     for feature_column, mapping in tqdm(features_mapping.items()):
         code = mapping.get('code')
         features_list = mapping.get('features_list')
@@ -52,6 +73,11 @@ def get_max_indexes(df, features_mapping):
 
 
 def preprocess(df):
+    """Wrapper function for data processing
+
+    :param df - dataframe to preprocess
+
+    :returns preprocessed dataframe"""
     data, features_mapping = create_features_columns(df)
     z_standartization_mapping = create_z_stand_mapping(data, features_mapping)
 
@@ -62,6 +88,12 @@ def preprocess(df):
 
 
 def main(filename='data/test.tsv', save=True):
+    """main function in script, preprocess data and saves it into file
+
+    :param filename - absolute path to file with raw data
+    :param save - boolean parameter, that determines whether we need to save the results
+
+    :returns preprocessed dataframe"""
     data = pd.read_csv(filename, sep='\t')
     preprocessed_data = preprocess(data)
 

@@ -87,19 +87,22 @@ def preprocess(df):
     return data
 
 
-def main(filename='data/test.tsv', save=True):
+def main(filename='test.tsv', save=True, path='data/'):
     """main function in script, preprocess data and saves it into file
 
-    :param filename - absolute path to file with raw data
+    :param filename - file with raw data
+    :param path - absolute path to file
     :param save - boolean parameter, that determines whether we need to save the results
 
     :returns preprocessed dataframe"""
-    data = pd.read_csv(filename, sep='\t')
+    data = pd.read_csv(path+filename, sep='\t')
     preprocessed_data = preprocess(data)
 
     if save:
-        preprocessed_data.to_csv('data/preprocessed_{}'.format(filename), sep='\t')
+        preprocessed_data.to_csv('{path}preprocessed_{filename}'.format(path=path, filename=filename), sep='\t',
+                                 index=False)
 
     return preprocessed_data
 
 
+main()
